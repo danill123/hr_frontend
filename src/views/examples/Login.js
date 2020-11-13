@@ -1,21 +1,12 @@
 /*!
 
-=========================================================
-* Argon Dashboard React - v1.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
 import React from "react";
+import { connect } from "react-redux";
+
+import { userLogin } from "../../redux/actions/user"
 
 // reactstrap components
 import {
@@ -33,8 +24,46 @@ import {
   Col
 } from "reactstrap";
 
+// untuk mengambil state yang kita define
+const mapStateToProps = (state) => {
+  return {
+    tested: state.Login
+  }
+}
+
+// untuk define aksi yang kita ingin lakukan di mapdispatch props
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginCheck: (email, password) => dispatch(userLogin(email, password))
+  }
+}
+
 class Login extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      fields: {
+        email : "",
+        password : ""
+      }
+    }
+  }
+  
+  handleValueForms(value, event) {
+    let fields = this.state.fields
+    fields[value] = event.target.value
+    this.setState({fields})
+  }
+  
+  submitForm(e) {
+    e.preventDefault()
+    let { loginCheck } = this.props
+    loginCheck("email redux", "password redux")
+  }
+  
   render() {
+    let { tested , loginCheck} = this.props // define state & actions menggunakan props
+    console.log(tested)
     return (
       <>
         <Col lg="5" md="7">
@@ -48,7 +77,7 @@ class Login extends React.Component {
                   className="btn-neutral btn-icon"
                   color="default"
                   href="#pablo"
-                  onClick={e => e.preventDefault()}
+                  onClick={loginCheck}
                 >
                   <span className="btn-inner--icon">
                     <img
@@ -78,7 +107,7 @@ class Login extends React.Component {
               <div className="text-center text-muted mb-4">
                 <small>Or sign in with credentials</small>
               </div>
-              <Form role="form">
+              <Form role="form" onSubmit={this.submitForm.bind(this)}>
                 <FormGroup className="mb-3">
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
@@ -86,7 +115,7 @@ class Login extends React.Component {
                         <i className="ni ni-email-83" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" type="email" autoComplete="new-email"/>
+                    <Input placeholder="Email" name="email" type="email" autoComplete="new-email" value={this.state.fields.email} onChange={this.handleValueForms.bind(this, "email")}/>
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -96,7 +125,7 @@ class Login extends React.Component {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" type="password" autoComplete="new-password"/>
+                    <Input placeholder="Password" name="password" type="password" autoComplete="new-password" value={this.state.fields.password} onChange={this.handleValueForms.bind(this, "password")}/>
                   </InputGroup>
                 </FormGroup>
                 <div className="custom-control custom-control-alternative custom-checkbox">
@@ -113,7 +142,7 @@ class Login extends React.Component {
                   </label>
                 </div>
                 <div className="text-center">
-                  <Button className="my-4" color="primary" type="button">
+                  <Button className="my-4" color="primary" type="submit">
                     Sign in
                   </Button>
                 </div>
@@ -146,4 +175,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
