@@ -39,20 +39,20 @@ class AdminNavbar extends React.Component {
           expand="md"
         >
           <Container className="px-4">
-            <NavbarBrand to="/" tag={Link}>
-              <img alt="..." src={require("assets/img/brand/argon-react-white.png")} />
-            </NavbarBrand>
+            {/* <NavbarBrand to="/" tag={Link}> */}
+              {/* <img alt="..." src={require("assets/img/brand/badegan_logo.png")} width={100} /> */}
+            {/* </NavbarBrand> */}
             <button className="navbar-toggler" id="navbar-collapse-main">
               <span className="navbar-toggler-icon" />
             </button>
-            <UncontrolledCollapse navbar toggler="#navbar-collapse-main">
+            {/*<UncontrolledCollapse navbar toggler="#navbar-collapse-main">
               <div className="navbar-collapse-header d-md-none">
                 <Row>
                   <Col className="collapse-brand" xs="6">
                     <Link to="/">
                       <img
                         alt="..."
-                        src={require("assets/img/brand/argon-react.png")}
+                        src={require("assets/img/brand/badegan_logo.png")}
                       />
                     </Link>
                   </Col>
@@ -105,7 +105,7 @@ class AdminNavbar extends React.Component {
                   </NavLink>
                 </NavItem>
               </Nav>
-            </UncontrolledCollapse>
+            </UncontrolledCollapse>*/}
           </Container>
         </Navbar>
       </>

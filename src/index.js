@@ -1,6 +1,5 @@
 /*!
-* Coded by Creative Tim
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  check apakah user sudah pernah login atau belum
 */
 import React from "react";
 import ReactDOM from "react-dom";
@@ -16,6 +15,7 @@ import { createLogger } from 'redux-logger';
 
 import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
+import { JWT_KEY } from "./redux/constantsvar";
 
 /* --- import reducers ---*/
 import { Login } from './redux/reducers/user';
@@ -23,20 +23,29 @@ import { Login } from './redux/reducers/user';
 /* define redux store and utility */
 const logger = createLogger();
 const rootReducers = combineReducers({ Login });
-const store = createStore(rootReducers, applyMiddleware(ThunkMiddleware, logger))
-
-// console.log(localStorage.getItem('user_session'))
+const store = createStore(rootReducers, applyMiddleware(ThunkMiddleware, logger)); // -> for development with redux debug
+// const store = createStore(rootReducers, applyMiddleware(ThunkMiddleware)); // -> for production
+const jwt = require('jsonwebtoken');
 
 const checkLoggedin = () => {
-
   if(localStorage.getItem('user_session')) {
-    return (
-      <>
-        <Route path="/admin" render={props => <AdminLayout {...props} />} />
-        <Route path="/auth" render={props => <AuthLayout {...props} />} />
-        <Redirect from="/" to="/admin/index" />
-      </>
-    );
+    let verify = jwt.decode(localStorage.getItem('user_session'), JWT_KEY);
+    if(verify.auth) {
+      return (
+        <>
+          <Route path="/admin" render={props => <AdminLayout {...props} />} />
+          <Route path="/auth" render={props => <AuthLayout {...props} />} />
+          <Redirect from="/" to="/admin/index" />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Route path="/auth" render={props => <AuthLayout {...props} />} />
+          <Redirect from="/" to="/auth/login" />
+        </>
+      );
+    }
   } else {
     return (
       <>
@@ -45,7 +54,6 @@ const checkLoggedin = () => {
       </>
     );
   }
-
 }
 
 ReactDOM.render(

@@ -1,8 +1,3 @@
-/*!
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import { connect } from "react-redux";
 
@@ -21,8 +16,11 @@ import {
   InputGroupText,
   InputGroup,
   Row,
-  Col
+  Col,
+  Alert
 } from "reactstrap";
+
+import { Redirect } from "react-router-dom";
 
 // untuk mengambil state yang kita define
 const mapStateToProps = (state) => {
@@ -45,7 +43,8 @@ class Login extends React.Component {
       fields: {
         email : "",
         password : ""
-      }
+      },
+      completefield: true
     }
   }
   
@@ -57,23 +56,41 @@ class Login extends React.Component {
   
   submitForm(e) {
     e.preventDefault()
-    let { loginCheck } = this.props
-    loginCheck("email redux", "password redux")
+    let { loginCheck } = this.props // take dispatch function for auth check
+    if(!this.state.fields.email || !this.state.fields.password) {
+      this.setState({ completefield: false})
+    } else {
+      loginCheck(this.state.fields.email, this.state.fields.password)
+    }
   }
   
   render() {
-    let { tested , loginCheck} = this.props // define state & actions menggunakan props
+    let { tested } = this.props // define state & actions menggunakan props
     console.log(tested)
     return (
       <>
         <Col lg="5" md="7">
           <Card className="bg-secondary shadow border-0">
-            <CardHeader className="bg-transparent pb-5">
-              <div className="text-muted text-center mt-2 mb-3">
-                <small>Sign in with</small>
-              </div>
+            <CardHeader className="bg-transparent">
+              {(tested.failedAuth)? 
+                <Alert color="danger">
+                  Pengguna tidak ditemukan
+                </Alert> : ""
+              }
+              {(!this.state.completefield)? 
+                <Alert color="danger">
+                  Silahkan isi data form dengan lengkap
+                </Alert> : ""
+              }
+              {(tested.errorAuth)? 
+                <Alert color="danger">
+                  Login
+                </Alert> : ""
+              }
+              {(tested.auth) ? <Redirect to="/admin/index"/> : ""}
               <div className="btn-wrapper text-center">
-                <Button
+                <img alt="..." src={require("assets/img/brand/badegan_logo.png")} width={100} />
+                {/*<Button
                   className="btn-neutral btn-icon"
                   color="default"
                   href="#pablo"
@@ -100,13 +117,13 @@ class Login extends React.Component {
                     />
                   </span>
                   <span className="btn-inner--text">Google</span>
-                </Button>
+                </Button>*/}
+              </div>
+              <div className="text-muted text-center">
+                <h4>Sign in</h4>
               </div>
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
-              <div className="text-center text-muted mb-4">
-                <small>Or sign in with credentials</small>
-              </div>
               <Form role="form" onSubmit={this.submitForm.bind(this)}>
                 <FormGroup className="mb-3">
                   <InputGroup className="input-group-alternative">
