@@ -87,6 +87,7 @@ class Login extends React.Component {
                   Login
                 </Alert> : ""
               }
+              {(tested.auth) ? window.location.reload(true)  : ""}
               {(tested.auth) ? <Redirect to="/admin/index"/> : ""}
               <div className="btn-wrapper text-center">
                 <img alt="..." src={require("assets/img/brand/badegan_logo.png")} width={100} />

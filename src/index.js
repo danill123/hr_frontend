@@ -19,10 +19,11 @@ import { JWT_KEY } from "./redux/constantsvar";
 
 /* --- import reducers ---*/
 import { Login } from './redux/reducers/user';
+import { List_user } from './redux/reducers/user_data';
 
 /* define redux store and utility */
 const logger = createLogger();
-const rootReducers = combineReducers({ Login });
+const rootReducers = combineReducers({ Login , List_user });
 const store = createStore(rootReducers, applyMiddleware(ThunkMiddleware, logger)); // -> for development with redux debug
 // const store = createStore(rootReducers, applyMiddleware(ThunkMiddleware)); // -> for production
 const jwt = require('jsonwebtoken');
